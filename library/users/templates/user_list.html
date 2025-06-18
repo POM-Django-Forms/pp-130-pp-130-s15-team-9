@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>User List</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+    <p>This is user app page! Congratulations!</p>
+    <h1>User List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ID</th>
+                <th>Biography</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.biography }}</td>
+                <td>
+                    <a href="/user/edit/{{ user.id }}">Edit</a> |
+                    <a href="/user/delete/{{ user.id }}">Delete</a>
+                </td>
+
+
+            </tr>
+            {% endfor %}
+
+
+        </tbody>
+    </table>
+</body>
+</html>

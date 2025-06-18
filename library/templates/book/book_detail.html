@@ -1,0 +1,65 @@
+{% extends "library/base.html" %}
+{% block title %}Book detail{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <!-- Title -->
+            <h2 class="card-title">{{ book.name }}</h2>
+            <p class="card-text text-muted">{{ book.description }}</p>
+
+
+            <div class="mb-4">
+                <h5 class="text-primary">📘 Not change information</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Title:</strong> {{ book.name }}</li>
+                    <li class="list-group-item"><strong>Author(s):</strong>
+                        {% for author in book.authors.all %}
+                            {{ author.name }} {{ author.surname }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            <span class="text-muted">No author</span>
+                        {% endfor %}
+                    </li>
+                    <li class="list-group-item"><strong>Book year published:</strong> {{ book.year_published }}</li>
+                </ul>
+            </div>
+
+
+            <div class="mb-4">
+                <h5 class="text-success">♻️ Change information</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Release date:</strong> {{ book.release_date }}</li>
+                    <li class="list-group-item"><strong>Book count:</strong> {{ book.count }}</li>
+                </ul>
+            </div>
+
+            <form method="post" action="{% url 'make-order' %}" class="mt-3">
+                {% csrf_token %}
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+
+                <div class="mb-3">
+                    <label for="planned_return" class="form-label fw-bold">📅 Planned return date:</label>
+                    <input type="datetime-local"
+                           name="planned_return"
+                           id="planned_return"
+                           class="form-control"
+                           min="{{ min_date }}"
+                           max="{{ max_date }}"
+                           required>
+                    <div class="form-text">Select a date within 2 months from today.</div>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    ✅ Order book
+                </button>
+            </form>
+
+            <a href="{% url 'books_list' %}" class="btn btn-link mt-3">← Back to list</a>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

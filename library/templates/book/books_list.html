@@ -1,0 +1,79 @@
+{% extends "library/base.html" %}
+
+{% block title %}Books list{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <form method="get" class="row g-3 mb-4">
+  <div class="col-md-4">
+    <input type="text" name="name" class="form-control" placeholder="Search by book name" value="{{ request.GET.name }}">
+  </div>
+  <div class="col-md-4">
+    <input type="text" name="author" class="form-control" placeholder="Search by author surname" value="{{ request.GET.author }}">
+  </div>
+  <div class="col-md-4">
+    <button type="submit" class="btn btn-primary">🔍 Search</button>
+    <a href="{% url 'books_list' %}" class="btn btn-secondary">Reset</a>
+  </div>
+</form>
+    <h1 class="mb-4">📚 Books list</h1>
+
+    {% if books %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for book in books %}
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.name }}</h5>
+                    <p class="card-text">
+
+                        <strong>author:</strong> {% for author in book.authors.all %}
+                        {{ author.name }} {{ author.surname }};
+                        {% endfor %}
+                        <br>
+
+                        <strong>description:</strong> {{ book.description }};<br>
+                        <strong>count:</strong> {{ book.count }};<br>
+                        <a href="{% url 'book_detail' book.id %}">details</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning mt-4">
+        No books.
+    </div>
+    {% endif %}
+
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev.</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ page_obj.number }} from {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

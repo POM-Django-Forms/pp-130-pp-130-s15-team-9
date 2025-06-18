@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <title>Головна сторінка</title>
+</head>
+<body>
+    <h1>Вітаємо на головній сторінці!</h1>
+    <p>Ви зараз на <a href="/">http://127.0.0.1:8000/</a></p>
+</body>
+</html>
