@@ -143,6 +143,7 @@ STATIC_URL = '/static/'
 # Logger required settings.
 
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'login'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

@@ -21,83 +21,65 @@
 
                 <!-- BOOKS -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'books_list' %}">Books</a>
+                    <a class="nav-link" href="{% url 'book_list' %}">Books</a>
                 </li>
 
                 <!-- USERS -->
-                {% comment "optional note" %}
-<!--                {% if user.is_authenticated and user.role == 1 %}-->
-                {% endcomment %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Users</a>
                 </li>
-                {% comment "optional note" %}
-<!--                {% endif %}-->
-                    {% endcomment %}
+
                 <!-- ORDERS -->
-                {% comment "optional note" %}
-<!--                {% if user.is_authenticated %}-->
-<!--                    {% if user.role == 1 %}-->
-                {% endcomment %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'orders_list' %}">All Orders</a>
-                    </li>
-                {% comment "optional note" %}
-<!--                    {% else %}-->
-                {% endcomment %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my-orders' %}">My Orders</a>
-                    </li>
-                {% comment "optional note" %}
-<!--                    {% endif %}-->
-<!--                {% endif %}-->
-                {% endcomment %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'orders_list' %}">All Orders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my-orders' %}">My Orders</a>
+                </li>
 
                 <!-- AUTHORS -->
-                {% comment "optional note" %}
-<!--                {% if user.is_authenticated and user.role == 1 %}-->
-                {% endcomment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'authors-list' %}">Authors</a>
                 </li>
-                {% comment "optional note" %}
-<!--                {% endif %}-->
-                {% endcomment %}
 
             </ul>
 
             <!-- Auth section -->
             <ul class="navbar-nav">
-                {% comment "optional note" %}
-<!--                {% if user.is_authenticated %}-->
-                {% endcomment %}
-                    <li class="nav-item">
-                        <span class="navbar-text text-white me-3">Welcome,</span>
-                        <a href="http://127.0.0.1:8000/admin/" class="navbar-text text-white me-3">{{ user.first_name }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'login' %}">Login</a>
-                    </li>
-                {% comment "optional note" %}
-<!--                {% else %}-->
-                {% endcomment %}
-                    <li class="nav-item">
-                        <a href="{% url 'register' %}">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'logout' %}">Logout</a>
-                    </li>
-                {% comment "optional note" %}
-<!--                {% endif %}-->
-                {% endcomment %}
-            </ul>
+    {% if user.is_authenticated %}
+        <li class="nav-item">
+            <span class="navbar-text text-white me-2">Welcome,</span>
+            <span class="navbar-text text-white me-2">{{ user.first_name }}</span>
+        </li>
+
+        {% if user.is_staff %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'admin:index' %}">Адмін</a>
+            </li>
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'edit_profile' %}">✏️ Edit profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">🚪 Logout</a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">🔐 Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">📝 Register</a>
+        </li>
+    {% endif %}
+</ul>
+
         </div>
     </div>
 </nav>
 
 <div class="container">
     {% block content %}
-
     {% endblock %}
 </div>
 

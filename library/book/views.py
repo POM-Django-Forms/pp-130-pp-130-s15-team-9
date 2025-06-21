@@ -4,6 +4,25 @@ from .models import Book
 from django.utils import timezone
 from datetime import timedelta
 import pytz
+from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse_lazy
+from .forms import BookForm
+
+
+class BookCreateView(CreateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'book/book_form.html'
+    success_url = reverse_lazy('book_list')
+
+
+class BookUpdateView(UpdateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'book/book_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('book_detail', kwargs={'pk': self.object.pk})
 
 class BooksList(ListView):
     model = Book
