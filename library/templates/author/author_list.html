@@ -1,84 +1,101 @@
-{% extends 'library/base.html' %}
-{% block content %}
+{% extends 'library/base.html' %} {% block title %}All Authors – Library{%
+endblock %} {% block content %}
 <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-    <h2 class="mb-0">📚 All Authors</h2>
-    <a href="{% url 'author-create' %}" class="btn btn-success">Create author</a>
+  <h2 class="mb-0">📚 All Authors</h2>
+  <a href="{% url 'author-create' %}" class="btn btn-success">Create Author</a>
 </div>
+
 <form method="get" class="row g-3 mb-4">
   <div class="col-md-4">
-    <input type="text" name="name" class="form-control" placeholder="Search by author name" value="{{ request.GET.name }}">
+    <input
+      type="text"
+      name="name"
+      class="form-control"
+      placeholder="Search by name"
+      value="{{ request.GET.name }}"
+    />
   </div>
   <div class="col-md-4">
-    <input type="text" name="surname" class="form-control" placeholder="Search by author surname" value="{{ request.GET.surname }}">
+    <input
+      type="text"
+      name="surname"
+      class="form-control"
+      placeholder="Search by surname"
+      value="{{ request.GET.surname }}"
+    />
   </div>
   <div class="col-md-4">
     <button type="submit" class="btn btn-primary">🔍 Search</button>
     <a href="{% url 'authors-list' %}" class="btn btn-secondary">Reset</a>
   </div>
 </form>
+
 <table class="table table-striped table-bordered align-middle">
-    <thead class="table-dark">
-        <tr>
-            <th>Full Name</th>
-            <th>Patronymic</th>
-            <th>Books</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Patronymic</th>
+      <th>Books</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
     {% for author in authors %}
-        <tr>
-            <td>{{ author.name }} {{ author.surname }}</td>
-            <td>{{ author.patronymic }}</td>
-            <td>
-                {% if author.books.all %}
-                    <ul class="mb-0">
-                    {% for book in author.books.all %}
-                        <li>{{ book.name }}</li>
-                    {% endfor %}
-                    </ul>
-                {% else %}
-                    <span class="text-muted">No books</span>
-                {% endif %}
-            </td>
-            <td>
-                {% if not author.books.all %}
-                    <form method="post" action="{% url 'remove-author' author.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
-                    </form>
-                {% else %}
-                    <span class="text-muted">–</span>
-                {% endif %}
-            </td>
-        </tr>
+    <tr>
+      <td>{{ author.name }} {{ author.surname }}</td>
+      <td>{{ author.patronymic }}</td>
+      <td>
+        {% if author.books.all %}
+        <ul class="mb-0">
+          {% for book in author.books.all %}
+          <li>{{ book.name }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <span class="text-muted">No books</span>
+        {% endif %}
+      </td>
+      <td>
+        {% if not author.books.all %}
+        <form method="post" action="{% url 'remove-author' author.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">🗑 Delete</button>
+        </form>
+        {% else %}
+        <span class="text-muted">–</span>
+        {% endif %}
+      </td>
+    </tr>
     {% empty %}
-        <tr>
-            <td colspan="4" class="text-center">No authors found.</td>
-        </tr>
+    <tr>
+      <td colspan="4" class="text-center">No authors found.</td>
+    </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
 
 {% if is_paginated %}
 <nav>
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">← Previous</a>
-            </li>
-        {% endif %}
-
-        <li class="page-item disabled">
-            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        </li>
-
-        {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next →</a>
-            </li>
-        {% endif %}
-    </ul>
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+        >← Previous</a
+      >
+    </li>
+    {% endif %}
+    <li class="page-item disabled">
+      <span class="page-link"
+        >Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span
+      >
+    </li>
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}"
+        >Next →</a
+      >
+    </li>
+    {% endif %}
+  </ul>
 </nav>
-{% endif %}
-{% endblock %}
+{% endif %} {% endblock %}

@@ -1,74 +1,80 @@
 {% extends 'library/base.html' %}
-
+{% block title %}All Orders – Library{% endblock %}
 {% block content %}
 <h2 class="mt-3">📋 All Orders</h2>
 
-<form method="get" class="mb-4">
-    <label for="user">Filter by user:</label>
+<form method="get" class="mb-4 row g-3">
+  <div class="col-auto">
+    <label for="user" class="form-label">Filter by user:</label>
+  </div>
+  <div class="col-auto">
     <select name="user" id="user" class="form-select" onchange="this.form.submit()">
-        <option value="">All users</option>
-        {% for user in users %}
-        <option value="{{ user.id }}" {% if user.id|stringformat:"s" == selected_user %}selected{% endif %}> {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
-        </option>
-        {% endfor %}
+      <option value="">All users</option>
+      {% for u in users %}
+      <option value="{{ u.id }}"
+        {% if u.id|stringformat:"s" == selected_user %}selected{% endif %}>
+        {{ u.first_name }} {{ u.last_name }} ({{ u.email }})
+      </option>
+      {% endfor %}
     </select>
+  </div>
 </form>
 
-<table class="table table-bordered">
-    <thead>
+<table class="table table-bordered align-middle">
+  <thead class="table-dark">
     <tr>
-        <th>Order ID</th>
-        <th>Full name</th>
-        <th>Book</th>
-        <th>Created</th>
-        <th>End At</th>
-        <th>Planned Return</th>
+      <th>ID</th>
+      <th>User</th>
+      <th>Book</th>
+      <th>Created</th>
+      <th>Return</th>
+      <th>Planned Return</th>
     </tr>
-    </thead>
-    <tbody>
-    {% for order in orders %}
+  </thead>
+  <tbody>
+  {% for order in orders %}
     <tr>
-        <td>{{ order.id }}</td>
-        <td>{{ order.user.first_name }} {{ order.user.last_name }}</td>
-        <td>{{ order.book.name }}</td>
-        <td>{{ order.created_at }}</td>
-        <td>{% if order.end_at %}
-            {{ order.end_at }}
-            {% else %}
-            <form method="post" action="{% url 'mark_order_returned' order.id %}">
-                {% csrf_token %}
-                <button type="submit" class="return-button">Mark as returned</button>
-            </form>
-            {% endif %}
-        </td>
-        <td>{{ order.plated_end_at }}</td>
+      <td>{{ order.id }}</td>
+      <td>{{ order.user.first_name }} {{ order.user.last_name }}</td>
+      <td>{{ order.book.name }}</td>
+      <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+      <td>
+        {% if order.end_at %}
+          {{ order.end_at|date:"Y-m-d H:i" }}
+        {% else %}
+          <form method="post" action="{% url 'mark_order_returned' order.id %}">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-warning">Mark Returned</button>
+          </form>
+        {% endif %}
+      </td>
+      <td>{{ order.plated_end_at|date:"Y-m-d H:i" }}</td>
     </tr>
-    {% empty %}
+  {% empty %}
     <tr>
-        <td colspan="6">No orders found.</td>
+      <td colspan="6" class="text-center">No orders found.</td>
     </tr>
-    {% endfor %}
-    </tbody>
+  {% endfor %}
+  </tbody>
 </table>
 
 {% if is_paginated %}
 <nav>
-    <ul class="pagination">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link"
-               href="?{% if selected_user %}user={{ selected_user }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
-        </li>
-        {% endif %}
-        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-        </li>
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link"
-               href="?{% if selected_user %}user={{ selected_user }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
-        </li>
-        {% endif %}
-    </ul>
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?{% if selected_user %}user={{ selected_user }}&{% endif %}page={{ page_obj.previous_page_number }}">← Previous</a>
+    </li>
+    {% endif %}
+    <li class="page-item disabled">
+      <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    </li>
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?{% if selected_user %}user={{ selected_user }}&{% endif %}page={{ page_obj.next_page_number }}">Next →</a>
+    </li>
+    {% endif %}
+  </ul>
 </nav>
 {% endif %}
 {% endblock %}
